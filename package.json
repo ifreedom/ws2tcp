@@ -1,0 +1,22 @@
+{
+    "name": "ws2tcp",
+    "version": "1.0.0",
+    "description": "websocket to tcp proxy",
+    "main": "index.js",
+    "private": true,
+    "dependencies": {
+        "ws": ">=0.4.27"
+    },
+    "devDependencies": {
+        "pm2": "^2.5.0"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "websocket",
+        "tcp"
+    ],
+    "author": "Kun Wang <wang_cn@foxmail.com>",
+    "license": "GPL-3.0"
+}
