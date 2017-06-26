@@ -49,6 +49,7 @@ cd $thisDir
 
 #download https://raw.githubusercontent.com/dmrub/portable-node/master/bin/install-node.sh ./install-node.sh
 #chmod +x install-node.sh
+# use local version
 ./install-node.sh -v8.1.2
 
 export PATH="$thisDir/share/nodejs/node-v8.1.2-linux-x64/bin:$PATH"
