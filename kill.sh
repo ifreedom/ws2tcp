@@ -16,4 +16,4 @@ DIR="`dirname $0`"
 
 export PM2_HOME="$DIR/.pm2"
 
-$DIR/node-v8.1.2-linux-x64 $DIR/node_modules/.bin/pm2 start index.js --name="ws2tcp"
+$DIR/node-v8.1.2-linux-x64 $DIR/node_modules/.bin/pm2 kill
