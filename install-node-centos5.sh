@@ -1,32 +1,5 @@
 #!/bin/bash
 
-# Portable Node.js install script
-# Author: Dmitri Rubinstein
-# Version: 1.1
-# 2017-02-21
-#
-#Copyright (c) 2013, 2017
-#              DFKI - German Research Center for Artificial Intelligence
-#              www.dfki.de
-#
-#Permission is hereby granted, free of charge, to any person obtaining a copy of
-#this software and associated documentation files (the "Software"), to deal in
-#the Software without restriction, including without limitation the rights to
-#use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-#of the Software, and to permit persons to whom the Software is furnished to do
-# so, subject to the following conditions:
-#
-#The above copyright notice and this permission notice shall be included in all
-#copies or substantial portions of the Software.
-#
-#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-#SOFTWARE.
-
 export LC_ALL=C
 unset CDPATH
 
@@ -78,29 +51,6 @@ else
     die "No download tool found, please install wget or curl"
 fi
 
-# ask prompt default
-REPLY=
-ask() {
-    local prompt=$1
-    local default=$2
-
-    echo "$1"
-    [ -n "$default" ] && echo -n "[$default] "
-    read -e
-
-    [ -z "$REPLY" ] && REPLY=$default
-}
-
-# setup_ask prompt default
-setup_ask() {
-    if [ "$AUTO_INSTALL" = "yes" ]; then
-        echo "$1 : $2"
-        REPLY=$2
-    else
-        ask "$@"
-    fi
-}
-
 # Setup basic variables
 thisDir=$(abspath "$(dirname "$0")")
 case "$thisDir" in
@@ -108,20 +58,12 @@ case "$thisDir" in
 	*) baseDir=$thisDir;;
 esac
 
-# Check OS
-runCScript=
 case "$OSTYPE" in
     linux-gnu) ;;
-    msys|cygwin)
-        # Windows run install-node.vbs if available
-        [ -e "$thisDir/install-node.vbs" ] || die "Download and run install-node.vbs"
-        runCScript=yes
-        ;;
-    *) die "$OSTYPE OS is not supported."
+    #*) die "$OSTYPE OS is not supported."
 esac
 
-# Process command line arguments
-nodeVersion=6.9.5
+nodeVersion=5.12.0
 if [[ "$HOSTTYPE" == "x86_64" ]]; then
     nodeArch=x64
 else
@@ -170,21 +112,19 @@ EOF
     esac
 done
 
+if [ "$nodeVersion" != "5.12.0" ]; then
+   die "Unsupported node version: $nodeVersion"
+fi
+
 case "$nodeArch" in
     x86_64|x64|64) nodeArch=x64;;
-    x86|32) nodeArch=x86;;
     *) die "Unsupported architecture: $nodeArch";;
 esac
-
-if [[ "$runCScript" == "yes" ]]; then
-    echo "Executing: cscript //NoLogo \"$thisDir/install-node.vbs\" //version:\"$nodeVersion\" //arch:\"$nodeArch\""
-    exec cscript //NoLogo "$thisDir/install-node.vbs" //version:"$nodeVersion" //arch:"$nodeArch"
-fi
 
 # Setup paths
 nodePrefix="node-v${nodeVersion}-linux-${nodeArch}"
 nodeTarballFile="${nodePrefix}.tar.gz"
-nodeURL="http://nodejs.org/dist/v${nodeVersion}/${nodeTarballFile}"
+nodeURL="http://github.com/ifreedom/centos5-node/raw/master/${nodeTarballFile}"
 
 nodeBaseDirRel=share/nodejs # relative to baseDir
 nodeBaseDir=$(abspath "$baseDir/$nodeBaseDirRel")
@@ -192,7 +132,7 @@ nodeTarballPath=$(abspath "$nodeBaseDir/$nodeTarballFile")
 nodeInstallPathRel=$nodeBaseDirRel/$nodePrefix
 nodeInstallPath=$(abspath "$baseDir/$nodeInstallPathRel")
 
-echo "Download and install locally node.js version: $nodeVersion for architecture: $nodeArch"
+echo "install locally node.js version: $nodeVersion for architecture: $nodeArch"
 
 # Download node.js
 mkdir -p "$nodeBaseDir" || die "Could not create $nodeBaseDir directory"

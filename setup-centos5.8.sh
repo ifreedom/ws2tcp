@@ -34,10 +34,10 @@ fi
 DIR="`dirname $0`"
 cd $DIR
 
-download https://raw.github.com/dmrub/portable-node/master/bin/install-node.sh ./install-node.sh
-chmod +x ./install-node.sh
-./install-node.sh -v8.1.2
-ln -s node-v8.1.2-linux-x64 node
+#download http://github.com/ifreedom/centos5-node/raw/master/install-node-centos5.sh ./install-node-centos5.sh
+#chmod +x ./install-node-centos5.sh
+./install-node-centos5.sh -v5.12.0
+ln -s node-v5.12.0-linux-x64 node
 
-export PATH="./share/nodejs/node-v8.1.2-linux-x64/bin:$PATH"
+export PATH="./share/nodejs/node-v5.12.0-linux-x64/bin:$PATH"
 npm install
