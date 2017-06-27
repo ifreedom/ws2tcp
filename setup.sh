@@ -19,6 +19,7 @@ cd $DIR
 #chmod +x install-node.sh
 # use local version
 ./install-node.sh -v8.1.2
+ln -s node-v8.1.2-linux-x64 node
 
 export PATH="./share/nodejs/node-v8.1.2-linux-x64/bin:$PATH"
 npm install
