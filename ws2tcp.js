@@ -13,7 +13,7 @@ function heartbeat() {
 }
 
 // Handle new WebSocket client
-var make_client_handle = function(target_host, target_port) {
+var make_client_handle = function(target_host, target_port, data_log) {
     return function(client) {
         var clientAddr = client._socket.remoteAddress, log;
         if(client.upgradeReq && client.upgradeReq.url) console.log(client.upgradeReq.url);
@@ -30,7 +30,8 @@ var make_client_handle = function(target_host, target_port) {
 	    log('connected to target');
         });
         target.on('data', function(data) {
-	    //log("sending message: " + data);
+            if (data_log)
+	        log("sending message len " + data.length + ":" + data);
 	    try {
 	        client.send(data);
 	    } catch(e) {
@@ -49,7 +50,8 @@ var make_client_handle = function(target_host, target_port) {
         });
 
         client.on('message', function(msg) {
-	    //log('got message: ' + msg);
+            if (data_log)
+	        log('got message len ' + msg.length + ':' + msg);
 	    target.write(msg);
         });
         client.on('close', function(code, reason) {
@@ -96,7 +98,7 @@ function createWsServer(argv) {
     }
     webServer.listen(argv.source.port, argv.source.host, function() {
 	wsServer = new WebSocketServer({server: webServer});
-	wsServer.on('connection', make_client_handle(argv.target.host, argv.target.port));
+	wsServer.on('connection', make_client_handle(argv.target.host, argv.target.port, argv.output_data_log));
     });
 
     const interval = setInterval(() => {
